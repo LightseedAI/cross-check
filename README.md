@@ -36,7 +36,7 @@ Say `builder=claude` to keep the old order: Claude builds, Codex reviews.
 
 Tested on Codex CLI 0.162. In testing, the plain `codex review` command missed a hardcoded API key. This skill's structured review caught it as P0.
 
-Built by Darren Parker while shipping RealOffer solo.
+Built by Darren Parker.
 
 ## License
 
