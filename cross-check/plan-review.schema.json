@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["verdict", "findings"],
+  "properties": {
+    "verdict": {
+      "type": "string",
+      "enum": ["APPROVED", "REVISE", "BLOCKED"],
+      "description": "APPROVED = buildable as written, no P0/P1 left · REVISE = fixable problems · BLOCKED = needs a human decision or missing information"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["severity", "section", "problem", "evidence", "fix"],
+        "properties": {
+          "severity": {
+            "type": "string",
+            "enum": ["P0", "P1", "P2", "P3"],
+            "description": "P0 builds the wrong thing or loses data/security · P1 a real user gets a wrong result · P2 edge case · P3 minor"
+          },
+          "section": { "type": "string", "description": "Plan heading or step the finding is about" },
+          "problem": { "type": "string" },
+          "evidence": { "type": "string", "description": "File, line, doc or concrete input that shows the problem" },
+          "fix": { "type": "string", "description": "The change to make to the plan" }
+        }
+      }
+    }
+  }
+}

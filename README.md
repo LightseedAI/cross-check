@@ -1,8 +1,8 @@
 # cross-check
 
-A Claude Code skill that gets a second AI from a different lab to review Claude's work before you ship it.
+A Claude Code skill that makes Claude and OpenAI's Codex check each other's work.
 
-When Claude checks its own code, it's grading its own homework. Same model, same blind spots. This skill hands the review to OpenAI's Codex instead, then makes Claude deal with every finding.
+When Claude checks its own code, it's grading its own homework. Same model, same blind spots. This skill splits every job between two AIs from different labs, so nobody signs off their own work.
 
 ## Install
 
@@ -15,15 +15,24 @@ When Claude checks its own code, it's grading its own homework. Same model, same
    cp -r cross-check/cross-check ~/.claude/skills/
    ```
 
-3. In Claude Code, say **"cross-check this"** before you ship.
+3. In Claude Code, say **"cross-check this feature"** to plan and build, or **"cross-check this"** to review code before you ship.
 
 ## What it does
 
-- **Reviews the plan** before Claude writes any code
-- **Reviews the code** with a read-only Codex at high reasoning effort, focused on bugs, security holes and hardcoded secrets
-- Returns **structured findings** (P0–P3, file, line, why it breaks, fix) and a ship / fix-first verdict
-- **Loops** fix → re-review until no P0/P1 is left (max 3 rounds, then it hands back to you)
-- Tells you what was caught, fixed and dismissed
+1. **Claude writes the plan.** Goal, steps, acceptance checks and one proof command.
+2. **Codex attacks it.** It returns APPROVED, REVISE or BLOCKED with ranked findings. They go back and forth for up to 3 rounds until Codex approves.
+3. **Then they swap.** Codex builds it. A fresh, read-only Claude reviews the code.
+4. Every problem comes back **ranked P0 to P3**, with the file, the line, why it breaks and the fix.
+5. **The builder fixes, the reviewer checks again.** It loops until no P0 or P1 is left (max 3 rounds, then it hands back to you).
+6. It tells you what was caught, fixed and dismissed.
+
+| Mode | Use it for |
+|---|---|
+| `full` (default) | New feature or big change: plan, attack, build, review, fix |
+| `review` | Code already written: Codex reviews, Claude fixes |
+| `plan` | A plan or spec only |
+
+Say `builder=claude` to keep the old order: Claude builds, Codex reviews.
 
 Tested on Codex CLI 0.162. In testing, the plain `codex review` command missed a hardcoded API key. This skill's structured review caught it as P0.
 
